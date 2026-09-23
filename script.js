@@ -89,41 +89,12 @@ const closeSplashScreen = () => {
 };
 
 if (splashVideo) {
-  const onPlayerReady = () => {
-    if (!splashVideo.contentWindow) return;
-
-    splashVideo.contentWindow.postMessage(
-      JSON.stringify({ event: 'command', func: 'playVideo' }),
-      '*'
-    );
-
-    splashVideo.contentWindow.postMessage(
-      JSON.stringify({ event: 'command', func: 'unMute' }),
-      '*'
-    );
-  };
-
-  splashVideo.addEventListener('load', onPlayerReady);
-
-  setTimeout(() => {
-    onPlayerReady();
-  }, 800);
-
-  setTimeout(closeSplashScreen, 39000);
-}
-
-window.addEventListener('message', (event) => {
-  if (!event.data || typeof event.data !== 'string') return;
-
-  try {
-    const payload = JSON.parse(event.data);
-    if (payload && payload.info && typeof payload.info.playerState === 'number' && payload.info.playerState === 0) {
-      closeSplashScreen();
-    }
-  } catch (error) {
-    // Ignore non-JSON messages from third-party embeds.
+  if (splashVideo.dataset.src) {
+    splashVideo.src = splashVideo.dataset.src;
   }
-});
+
+  setTimeout(closeSplashScreen, 22000);
+}
 
 const sendPlayerCommand = (iframe, func, args = []) => {
   if (!iframe || !iframe.contentWindow) return;
